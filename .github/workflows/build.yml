@@ -5,29 +5,19 @@ on:
     branches:
      - master
   workflow_dispatch:
-  schedule:
-    - cron: '53 05 01 */3 *' # Artifacts expire every 3 months
 jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest]
         include:
           - os: windows-latest
             qt_arch: win32_msvc2019
             os_short: win
-          - os: ubuntu-latest
-            os_short: linux
-          - os: macos-latest
-            os_short: mac
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - name: Prepare short commit sha
-        shell: bash
-        run: echo "GITHUB_SHA_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
-
       - name: Configure build for x86
         if: startsWith(runner.os, 'Windows')
         uses: ilammy/msvc-dev-cmd@v1
@@ -50,24 +40,7 @@ jobs:
 
       - name: Configure
         run: qmake SourceAdminTool.pro -config release
-      - name: Build Linux
-        if: startsWith(runner.os, 'Linux')
-        shell: bash
-        run: |
-          make -j4
-          mkdir -p package/lib/{platforms,xcbglintegrations}
-          cp GeoLite2-Country.mmdb app_list_map.ini commands.xml qt.conf package
-          cp $Qt5_DIR/lib/{libQt5Widgets.so.5,libQt5Gui.so.5,libQt5Network.so.5,libQt5Core.so.5,libQt5XcbQpa.so.5,libicui18n.so.56,libicuuc.so.56,libicudata.so.56} package/lib
-          cp $Qt5_DIR/plugins/platforms/libqxcb.so package/lib/platforms
-          cp $Qt5_DIR/plugins/xcbglintegrations/{libqxcb-egl-integration.so,libqxcb-glx-integration.so} package/lib/xcbglintegrations
-          cp -r $Qt5_DIR/plugins/imageformats package/lib
-      - name: Build macOS
-        if: startsWith(runner.os, 'macOS')
-        run: |
-          make -j4
-          macdeployqt SourceAdminTool.app
-          mkdir package
-          mv SourceAdminTool.app package
+        
       - name: Build Windows
         if: startsWith(runner.os, 'Windows')
         run: | 
