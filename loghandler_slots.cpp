@@ -7,8 +7,8 @@
 
 extern QList<ServerInfo *> serverList;
 
-QStringList blueTeams = {"BLU", "CT"};
-QStringList redTeams = {"RED", "TERRORIST"};
+QStringList blueTeams = {"BLU", "CT", "SURVIVOR"};
+QStringList redTeams = {"RED", "TERRORIST", "INFECTED"};
 
 QRegularExpression chatRegex("^L\\d{2}\\/\\d{2}\\/\\d{4} - \\d{2}:\\d{2}:\\d{2}: \"(.+)<(\\d+)><([^>]+)><([^>]*)>\"(?: (say(?:_team)?) \"(.*)\")?.*?$");
 QRegularExpression actionRegex("^L\\d{2}\\/\\d{2}\\/\\d{4} - \\d{2}:\\d{2}:\\d{2}: \"(.+)<(\\d+)><([^>]+)><([^>]*)>\".*?\"(.+)<(\\d+)><([^>]+)><([^>]*)>\".*?$");
