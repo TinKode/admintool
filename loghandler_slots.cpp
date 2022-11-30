@@ -104,7 +104,10 @@ void MainWindow::parseLogLine(QString line, ServerInfo *info)
                 QString start = "<font>";
                 if(captures.at(5) == "say_team")
                 {
+                    this->ui->chatOutput->insertPlainText(chatLine);
+                    
                     QString team = captures.at(4);
+                    
                     if(blueTeams.contains(team))
                     {
                         start = QString("<font style='color:#32a0f0;'>(%1 TEAM) ").arg(captures.at(4));
@@ -133,6 +136,7 @@ void MainWindow::parseLogLine(QString line, ServerInfo *info)
 
                 this->ui->chatOutput->moveCursor(QTextCursor::End);
                 this->ui->chatOutput->insertHtml(chatLine);
+                this->ui->chatOutput->insertPlainText(chatLine);
                 this->ui->chatOutput->moveCursor(QTextCursor::End);
 
                 if(!shouldAutoScroll)
